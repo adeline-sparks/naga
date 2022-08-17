@@ -1,3 +1,5 @@
+use half::f16;
+
 use super::{conv, number::consume_number, Error, ExpectedToken, Span, Token, TokenSpan};
 
 fn consume_any(input: &str, what: impl Fn(char) -> bool) -> (&str, &str) {
@@ -411,14 +413,14 @@ fn test_numbers() {
             Token::Number(Ok(Number::F32(0.01))),
             Token::Number(Ok(Number::F32(12.34))),
             Token::Number(Ok(Number::F32(0.))),
-            Token::Number(Err(NumberError::UnimplementedF16)),
+            Token::Number(Ok(Number::F16(f16::from_f64(0.0)))),
             Token::Number(Ok(Number::F32(0.001))),
             Token::Number(Ok(Number::F32(43.75))),
             Token::Number(Ok(Number::F32(16.))),
             Token::Number(Ok(Number::F32(0.1875))),
-            Token::Number(Err(NumberError::UnimplementedF16)),
+            Token::Number(Ok(Number::F16(f16::from_f64(todo!())))),
             Token::Number(Ok(Number::F32(0.12109375))),
-            Token::Number(Err(NumberError::UnimplementedF16)),
+            Token::Number(Ok(Number::F16(f16::from_f64(todo!())))),
         ],
     );
 

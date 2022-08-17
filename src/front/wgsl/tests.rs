@@ -491,7 +491,7 @@ fn parse_enable_f16() {
         
         enable f16;
         
-        fn foo() { }
+        let x: f16 = 0.0h;
         ",
     )
     .unwrap();

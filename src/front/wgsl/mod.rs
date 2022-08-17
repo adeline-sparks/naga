@@ -91,8 +91,6 @@ pub enum NumberError {
     Invalid,
     #[error("numeric literal not representable by target type")]
     NotRepresentable,
-    #[error("unimplemented f16 type")]
-    UnimplementedF16,
 }
 
 #[derive(Clone, Debug)]
@@ -2193,6 +2191,10 @@ impl Parser {
                 Ok(Number::F32(num)) => crate::ConstantInner::Scalar {
                     value: crate::ScalarValue::Float(num as f64),
                     width: 4,
+                },
+                Ok(Number::F16(num)) => crate::ConstantInner::Scalar {
+                    value: crate::ScalarValue::Float(num.into()), 
+                    width: 2,
                 },
                 Ok(Number::AbstractInt(_) | Number::AbstractFloat(_)) => unreachable!(),
                 Err(e) => return Err(Error::BadNumber(first_token_span.1, e)),

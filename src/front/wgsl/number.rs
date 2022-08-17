@@ -1,5 +1,7 @@
 use std::borrow::Cow;
 
+use half::f16;
+
 use super::{NumberError, Token};
 
 /// When using this type assume no Abstract Int/Float for now
@@ -15,6 +17,8 @@ pub enum Number {
     U32(u32),
     /// Concrete f32
     F32(f32),
+    /// Concrete f16
+    F16(f16),
 }
 
 impl Number {
@@ -389,7 +393,7 @@ fn parse_hex_float(input: &str, kind: Option<FloatKind>) -> Result<Number, Numbe
             // can only be ParseHexfErrorKind::Inexact but we can't check since it's private
             _ => Err(NumberError::NotRepresentable),
         },
-        Some(FloatKind::F16) => Err(NumberError::UnimplementedF16),
+        Some(FloatKind::F16) => todo!("Find a f16 hex float parser"),
     }
 }
 
@@ -401,16 +405,18 @@ fn parse_dec_float(input: &str, kind: Option<FloatKind>) -> Result<Number, Numbe
             let num = input.parse::<f64>().unwrap(); // will never fail
             num.is_finite()
                 .then(|| Number::AbstractFloat(num))
-                .ok_or(NumberError::NotRepresentable)
         }
         Some(FloatKind::F32) => {
             let num = input.parse::<f32>().unwrap(); // will never fail
             num.is_finite()
                 .then(|| Number::F32(num))
-                .ok_or(NumberError::NotRepresentable)
         }
-        Some(FloatKind::F16) => Err(NumberError::UnimplementedF16),
-    }
+        Some(FloatKind::F16) => {
+            let num = input.parse::<f16>().unwrap();
+            num.is_finite()
+                .then(|| Number::F16(num))
+        },
+    }.ok_or(NumberError::NotRepresentable)
 }
 
 fn parse_int(

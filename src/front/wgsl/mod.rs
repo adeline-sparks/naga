@@ -4556,35 +4556,27 @@ impl Parser {
         Ok(true)
     }
 
-    pub fn parse(&mut self, source: &str) -> Result<crate::Module, ParseError> {
+    fn parse_module<'a>(&mut self, lexer: &mut Lexer<'a>) -> Result<crate::Module, Error<'a>> {
         self.reset();
 
-        let mut lexer = Lexer::new(source);
-
-        loop {
-            match self.parse_global_directive(&mut lexer) {
-                Err(error) => return Err(error.as_parse_error(lexer.source)),
-                Ok(true) => {}
-                Ok(false) => break,
-            }
-        }
+        while self.parse_global_directive(lexer)? { }
 
         let mut module = crate::Module::default();
         let mut lookup_global_expression = FastHashMap::default();
 
-        loop {
-            match self.parse_global_decl(&mut lexer, &mut module, &mut lookup_global_expression) {
-                Err(error) => return Err(error.as_parse_error(lexer.source)),
-                Ok(true) => {}
-                Ok(false) => {
-                    if !self.scopes.is_empty() {
-                        log::error!("Reached the end of file, but scopes are not closed");
-                        return Err(Error::Other.as_parse_error(lexer.source));
-                    };
-                    return Ok(module);
-                }
-            }
-        }
+        while self.parse_global_decl(lexer, &mut module, &mut lookup_global_expression)? { }
+
+        if !self.scopes.is_empty() {
+            log::error!("Reached the end of file, but scopes are not closed");
+            return Err(Error::Other);
+        };
+
+        Ok(module)
+    }
+
+    pub fn parse(&mut self, source: &str) -> Result<crate::Module, ParseError> {
+        let mut lexer = Lexer::new(source);
+        self.parse_module(&mut lexer).map_err(|err| err.as_parse_error(source))
     }
 }
 

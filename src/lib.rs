@@ -213,6 +213,9 @@ pub mod proc;
 mod span;
 pub mod valid;
 
+#[cfg(test)] #[macro_use]
+extern crate assert_matches;
+
 pub use crate::arena::{Arena, Handle, Range, UniqueArena};
 
 pub use crate::span::{SourceLocation, Span, SpanContext, WithSpan};

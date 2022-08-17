@@ -1,4 +1,10 @@
-use super::parse_str;
+use super::{parse_str, Error, Parser, Lexer};
+
+#[track_caller]
+fn parse_err<'a>(source: &'a str) -> Error<'a> {
+    let mut lexer = Lexer::new(source);
+    Parser::new().parse_module(&mut lexer).unwrap_err()
+}
 
 #[test]
 fn parse_comment() {
@@ -459,14 +465,22 @@ fn parse_storage_buffers() {
 
 #[test]
 fn parse_enable_errors() {
-    assert!(parse_str("enable unknown_extension;").is_err());
-    assert!(parse_str(
-        "
-        fn foo() { }
-        
-        enable late_extension;
-        "
-    ).is_err());
+    assert_matches!(
+        parse_err(
+            "enable unknown_extension;"
+        ),
+        Error::UnknownExtension(..)
+    );
+    assert_matches!(
+        parse_err(
+            "
+            fn foo() { }
+            
+            enable late_extension;
+            "
+        ),
+        Error::Unexpected(..)
+    );
 }
 
 #[test]
@@ -476,8 +490,6 @@ fn parse_enable_f16() {
         enable f16; enable f16;
         
         enable f16;
-
-        
         
         fn foo() { }
         ",

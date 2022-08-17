@@ -456,3 +456,31 @@ fn parse_storage_buffers() {
     )
     .unwrap();
 }
+
+#[test]
+fn parse_enable_errors() {
+    assert!(parse_str("enable unknown_extension;").is_err());
+    assert!(parse_str(
+        "
+        fn foo() { }
+        
+        enable late_extension;
+        "
+    ).is_err());
+}
+
+#[test]
+fn parse_enable_f16() {
+    parse_str(
+        "
+        enable f16; enable f16;
+        
+        enable f16;
+
+        
+        
+        fn foo() { }
+        ",
+    )
+    .unwrap();
+}

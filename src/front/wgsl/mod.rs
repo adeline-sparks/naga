@@ -156,6 +156,7 @@ pub enum Error<'a> {
         previous: Span,
         current: Span,
     },
+    UnknownExtension(Span),
     Other,
 }
 
@@ -454,6 +455,11 @@ impl<'a> Error<'a> {
                 labels: vec![(current.clone(), format!("redefinition of `{}`", &source[current.clone()]).into()),
                              (previous.clone(), format!("previous definition of `{}`", &source[previous.clone()]).into())
                 ],
+                notes: vec![],
+            },
+            Error::UnknownExtension(ref span) => ParseError { 
+                message: format!("Unknown extension `{}`", &source[span.clone()]),
+                labels: vec![(span.clone(), "Unknown extension".into())],
                 notes: vec![],
             },
             Error::Other => ParseError {
@@ -1352,6 +1358,7 @@ pub struct Parser {
     module_scope_identifiers: FastHashMap<String, Span>,
     lookup_type: FastHashMap<String, Handle<crate::Type>>,
     layouter: Layouter,
+    f16_enabled: bool,
 }
 
 impl Parser {
@@ -1361,6 +1368,7 @@ impl Parser {
             module_scope_identifiers: FastHashMap::default(),
             lookup_type: FastHashMap::default(),
             layouter: Default::default(),
+            f16_enabled: false,
         }
     }
 
@@ -1369,6 +1377,7 @@ impl Parser {
         self.module_scope_identifiers.clear();
         self.lookup_type.clear();
         self.layouter.clear();
+        self.f16_enabled = false;
     }
 
     fn push_scope(&mut self, scope: Scope, lexer: &Lexer<'_>) {
@@ -4531,12 +4540,38 @@ impl Parser {
         }
     }
 
+    fn parse_global_directive<'a>(&mut self, lexer: &mut Lexer<'a>) -> Result<bool, Error<'a>> {
+        if !lexer.skip(Token::Word("enable")) {
+            return Ok(false);
+        }
+
+        match lexer.next_ident_with_span()? {
+            ("f16", _) => {
+                self.f16_enabled = true;
+            }
+            (_, span) => return Err(Error::UnknownExtension(span)),
+        }
+
+        lexer.expect(Token::Separator(';'))?;
+        Ok(true)
+    }
+
     pub fn parse(&mut self, source: &str) -> Result<crate::Module, ParseError> {
         self.reset();
 
-        let mut module = crate::Module::default();
         let mut lexer = Lexer::new(source);
+
+        loop {
+            match self.parse_global_directive(&mut lexer) {
+                Err(error) => return Err(error.as_parse_error(lexer.source)),
+                Ok(true) => {}
+                Ok(false) => break,
+            }
+        }
+
+        let mut module = crate::Module::default();
         let mut lookup_global_expression = FastHashMap::default();
+
         loop {
             match self.parse_global_decl(&mut lexer, &mut module, &mut lookup_global_expression) {
                 Err(error) => return Err(error.as_parse_error(lexer.source)),

@@ -155,6 +155,7 @@ pub enum Error<'a> {
         current: Span,
     },
     UnknownExtension(Span),
+    F16NotEnabled(Span),
     Other,
 }
 
@@ -458,6 +459,11 @@ impl<'a> Error<'a> {
             Error::UnknownExtension(ref span) => ParseError { 
                 message: format!("Unknown extension `{}`", &source[span.clone()]),
                 labels: vec![(span.clone(), "Unknown extension".into())],
+                notes: vec![],
+            },
+            Error::F16NotEnabled(ref span) => ParseError { 
+                message: format!("f16 extension must be enabled before use"), 
+                labels: vec![(span.clone(), "f16".into())],
                 notes: vec![],
             },
             Error::Other => ParseError {
@@ -2192,9 +2198,13 @@ impl Parser {
                     value: crate::ScalarValue::Float(num as f64),
                     width: 4,
                 },
-                Ok(Number::F16(num)) => crate::ConstantInner::Scalar {
-                    value: crate::ScalarValue::Float(num.into()), 
-                    width: 2,
+                Ok(Number::F16(num)) => if self.f16_enabled {
+                    crate::ConstantInner::Scalar {
+                        value: crate::ScalarValue::Float(num.into()), 
+                        width: 2,
+                    }
+                } else {
+                    return Err(Error::F16NotEnabled(first_token_span.1));
                 },
                 Ok(Number::AbstractInt(_) | Number::AbstractFloat(_)) => unreachable!(),
                 Err(e) => return Err(Error::BadNumber(first_token_span.1, e)),
@@ -2937,10 +2947,14 @@ impl Parser {
         lexer: &mut Lexer<'a>,
         _attribute: TypeAttributes,
         word: &'a str,
+        word_span: &Span,
         type_arena: &mut UniqueArena<crate::Type>,
         const_arena: &mut Arena<crate::Constant>,
     ) -> Result<Option<crate::TypeInner>, Error<'a>> {
         if let Some((kind, width)) = conv::get_scalar_type(word) {
+            if !self.f16_enabled && kind == crate::ScalarKind::Float && width == 2 {
+                return Err(Error::F16NotEnabled(word_span.clone()))
+            }
             return Ok(Some(crate::TypeInner::Scalar { kind, width }));
         }
 
@@ -3240,7 +3254,7 @@ impl Parser {
         Ok(match self.lookup_type.get(name) {
             Some(&handle) => handle,
             None => {
-                match self.parse_type_decl_impl(lexer, attribute, name, type_arena, const_arena)? {
+                match self.parse_type_decl_impl(lexer, attribute, name, &name_span, type_arena, const_arena)? {
                     Some(inner) => {
                         let span = name_span.start..lexer.current_byte_offset();
                         type_arena.insert(

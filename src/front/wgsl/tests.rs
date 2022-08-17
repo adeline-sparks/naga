@@ -495,4 +495,14 @@ fn parse_enable_f16() {
         ",
     )
     .unwrap();
+
+    assert_matches!(
+        parse_err("let x = 0.0h;"),
+        Error::F16NotEnabled(..)
+    );
+
+    assert_matches!(
+        parse_err("fn foo(x: f16) { }"),
+        Error::F16NotEnabled(..)
+    );
 }

@@ -237,6 +237,7 @@ pub(super) fn parse_construction<'a>(
                     lexer,
                     super::TypeAttributes::default(),
                     type_name,
+                    &type_span,
                     ctx.types,
                     ctx.constants,
                 )? {

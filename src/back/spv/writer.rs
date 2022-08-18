@@ -11,6 +11,7 @@ use crate::{
     proc::{Alignment, TypeResolution},
     valid::{FunctionInfo, ModuleInfo},
 };
+use half::f16;
 use spirv::Word;
 use std::collections::hash_map::Entry;
 
@@ -1048,6 +1049,10 @@ impl Writer {
             }
             crate::ScalarValue::Float(val) => {
                 let words = match width {
+                    2 => {
+                        solo = [f16::from_f64(val).to_bits() as u32];
+                        &solo[..]
+                    }
                     4 => {
                         solo = [(val as f32).to_bits()];
                         &solo[..]

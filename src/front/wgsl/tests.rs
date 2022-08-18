@@ -1,4 +1,4 @@
-use super::{parse_str, Error, Parser, Lexer};
+use super::{parse_str, Error, Lexer, Parser};
 
 #[track_caller]
 fn parse_err<'a>(source: &'a str) -> Error<'a> {
@@ -466,9 +466,7 @@ fn parse_storage_buffers() {
 #[test]
 fn parse_enable_errors() {
     assert_matches!(
-        parse_err(
-            "enable unknown_extension;"
-        ),
+        parse_err("enable unknown_extension;"),
         Error::UnknownExtension(..)
     );
     assert_matches!(
@@ -492,17 +490,24 @@ fn parse_enable_f16() {
         enable f16;
         
         let x: f16 = 0.0h;
+        var<private> p: f16;
+        
+        struct S {
+            f: f16,
+            a: array<f16, 4>,
+        }
+
+        fn foo(x: f16, y: f16) -> f16 {
+            let z: f16 = x + y;
+            return z * z * f16(2.0);
+        }
         ",
     )
     .unwrap();
 
-    assert_matches!(
-        parse_err("let x = 0.0h;"),
-        Error::F16NotEnabled(..)
-    );
+    assert_matches!(parse_err("let x = 0.0h;"), Error::F16NotEnabled(..));
 
-    assert_matches!(
-        parse_err("fn foo(x: f16) { }"),
-        Error::F16NotEnabled(..)
-    );
+    assert_matches!(parse_err("let x = f16(0.0)"), Error::F16NotEnabled(..));
+
+    assert_matches!(parse_err("fn foo(x: f16) { }"), Error::F16NotEnabled(..));
 }

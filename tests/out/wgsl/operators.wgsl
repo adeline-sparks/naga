@@ -6,11 +6,14 @@ struct Foo {
 let v_f32_one: vec4<f32> = vec4<f32>(1.0, 1.0, 1.0, 1.0);
 let v_f32_zero: vec4<f32> = vec4<f32>(0.0, 0.0, 0.0, 0.0);
 let v_f32_half: vec4<f32> = vec4<f32>(0.5, 0.5, 0.5, 0.5);
+let v_f16_one: vec4<f32> = vec4<f32>(1.0, 1.0, 1.0, 1.0);
 let v_i32_one: vec4<i32> = vec4<i32>(1, 1, 1, 1);
 fn builtins() -> vec4<f32> {
     let s1_ = select(0, 1, true);
     let s2_ = select(vec4<f32>(0.0, 0.0, 0.0, 0.0), vec4<f32>(1.0, 1.0, 1.0, 1.0), true);
     let s3_ = select(vec4<f32>(1.0, 1.0, 1.0, 1.0), vec4<f32>(0.0, 0.0, 0.0, 0.0), vec4<bool>(false, false, false, false));
+    let s4_ = select(vec4<f32>(1.0, 1.0, 1.0, 1.0), vec4<f32>(1.0, 1.0, 1.0, 1.0), vec4<bool>(false, false, false, false));
+    let s5_ = select(vec4<f32>(1.0, 1.0, 1.0, 1.0), vec4<f32>(1.0, 1.0, 1.0, 1.0), vec4<bool>(false, false, false, false));
     let m1_ = mix(vec4<f32>(0.0, 0.0, 0.0, 0.0), vec4<f32>(1.0, 1.0, 1.0, 1.0), vec4<f32>(0.5, 0.5, 0.5, 0.5));
     let m2_ = mix(vec4<f32>(0.0, 0.0, 0.0, 0.0), vec4<f32>(1.0, 1.0, 1.0, 1.0), 0.10000000149011612);
     let b1_ = bitcast<f32>(vec4<i32>(1, 1, 1, 1).x);
@@ -47,8 +50,8 @@ fn constructors() -> f32 {
     _ = mat2x3<f32>(mat2x3<f32>(vec3<f32>(0.0, 0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0)));
     _ = bitcast<vec2<u32>>(vec2<u32>(0u, 0u));
     _ = mat2x3<f32>(mat2x3<f32>(vec3<f32>(0.0, 0.0, 0.0), vec3<f32>(0.0, 0.0, 0.0)));
-    let _e75 = foo.a.x;
-    return _e75;
+    let _e76 = foo.a.x;
+    return _e76;
 }
 
 fn logical() {
@@ -204,45 +207,45 @@ fn assignment() {
     var a: i32 = 1;
     var vec0_: vec3<i32> = vec3<i32>(0, 0, 0);
 
-    let _e6 = a;
-    a = (_e6 + 1);
-    let _e9 = a;
-    a = (_e9 - 1);
-    let _e12 = a;
+    let _e7 = a;
+    a = (_e7 + 1);
+    let _e10 = a;
+    a = (_e10 - 1);
     let _e13 = a;
-    a = (_e12 * _e13);
-    let _e15 = a;
+    let _e14 = a;
+    a = (_e13 * _e14);
     let _e16 = a;
-    a = (_e15 / _e16);
-    let _e18 = a;
-    a = (_e18 % 1);
-    let _e21 = a;
-    a = (_e21 & 0);
-    let _e24 = a;
-    a = (_e24 | 0);
-    let _e27 = a;
-    a = (_e27 ^ 0);
-    let _e30 = a;
-    a = (_e30 << 2u);
-    let _e33 = a;
-    a = (_e33 >> 1u);
-    let _e36 = a;
-    a = (_e36 + 1);
-    let _e39 = a;
-    a = (_e39 - 1);
-    let _e46 = vec0_.y;
-    vec0_.y = (_e46 + 1);
-    let _e51 = vec0_.y;
-    vec0_.y = (_e51 - 1);
+    let _e17 = a;
+    a = (_e16 / _e17);
+    let _e19 = a;
+    a = (_e19 % 1);
+    let _e22 = a;
+    a = (_e22 & 0);
+    let _e25 = a;
+    a = (_e25 | 0);
+    let _e28 = a;
+    a = (_e28 ^ 0);
+    let _e31 = a;
+    a = (_e31 << 2u);
+    let _e34 = a;
+    a = (_e34 >> 1u);
+    let _e37 = a;
+    a = (_e37 + 1);
+    let _e40 = a;
+    a = (_e40 - 1);
+    let _e47 = vec0_.y;
+    vec0_.y = (_e47 + 1);
+    let _e52 = vec0_.y;
+    vec0_.y = (_e52 - 1);
     return;
 }
 
 @compute @workgroup_size(1, 1, 1) 
 fn main() {
-    let _e4 = builtins();
-    let _e5 = splat();
-    let _e7 = bool_cast(vec4<f32>(1.0, 1.0, 1.0, 1.0).xyz);
-    let _e8 = constructors();
+    let _e5 = builtins();
+    let _e6 = splat();
+    let _e8 = bool_cast(vec4<f32>(1.0, 1.0, 1.0, 1.0).xyz);
+    let _e9 = constructors();
     logical();
     arithmetic();
     bit();

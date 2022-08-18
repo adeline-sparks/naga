@@ -403,20 +403,18 @@ fn parse_dec_float(input: &str, kind: Option<FloatKind>) -> Result<Number, Numbe
     match kind {
         None => {
             let num = input.parse::<f64>().unwrap(); // will never fail
-            num.is_finite()
-                .then(|| Number::AbstractFloat(num))
+            num.is_finite().then(|| Number::AbstractFloat(num))
         }
         Some(FloatKind::F32) => {
             let num = input.parse::<f32>().unwrap(); // will never fail
-            num.is_finite()
-                .then(|| Number::F32(num))
+            num.is_finite().then(|| Number::F32(num))
         }
         Some(FloatKind::F16) => {
             let num = input.parse::<f16>().unwrap();
-            num.is_finite()
-                .then(|| Number::F16(num))
-        },
-    }.ok_or(NumberError::NotRepresentable)
+            num.is_finite().then(|| Number::F16(num))
+        }
+    }
+    .ok_or(NumberError::NotRepresentable)
 }
 
 fn parse_int(

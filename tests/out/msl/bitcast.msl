@@ -7,6 +7,7 @@ using metal::uint;
 
 kernel void main_(
 ) {
+    int i = 0;
     metal::int2 i2_ = {};
     metal::int3 i3_ = {};
     metal::int4 i4_ = {};
@@ -16,6 +17,8 @@ kernel void main_(
     metal::float2 f2_ = {};
     metal::float3 f3_ = {};
     metal::float4 f4_ = {};
+    metal::float2 h2_ = {};
+    metal::float4 h4_ = {};
     i2_ = metal::int2(0);
     i3_ = metal::int3(0);
     i4_ = metal::int4(0);
@@ -25,23 +28,25 @@ kernel void main_(
     f2_ = metal::float2(0.0);
     f3_ = metal::float3(0.0);
     f4_ = metal::float4(0.0);
-    metal::int2 _e27 = i2_;
-    u2_ = as_type<metal::uint2>(_e27);
-    metal::int3 _e29 = i3_;
-    u3_ = as_type<metal::uint3>(_e29);
-    metal::int4 _e31 = i4_;
-    u4_ = as_type<metal::uint4>(_e31);
-    metal::uint2 _e33 = u2_;
-    i2_ = as_type<metal::int2>(_e33);
-    metal::uint3 _e35 = u3_;
-    i3_ = as_type<metal::int3>(_e35);
-    metal::uint4 _e37 = u4_;
-    i4_ = as_type<metal::int4>(_e37);
-    metal::int2 _e39 = i2_;
-    f2_ = as_type<metal::float2>(_e39);
-    metal::int3 _e41 = i3_;
-    f3_ = as_type<metal::float3>(_e41);
-    metal::int4 _e43 = i4_;
-    f4_ = as_type<metal::float4>(_e43);
+    h2_ = metal::float2(0.0);
+    h4_ = metal::float4(0.0);
+    metal::int2 _e35 = i2_;
+    u2_ = as_type<metal::uint2>(_e35);
+    metal::int3 _e37 = i3_;
+    u3_ = as_type<metal::uint3>(_e37);
+    metal::int4 _e39 = i4_;
+    u4_ = as_type<metal::uint4>(_e39);
+    metal::uint2 _e41 = u2_;
+    i2_ = as_type<metal::int2>(_e41);
+    metal::uint3 _e43 = u3_;
+    i3_ = as_type<metal::int3>(_e43);
+    metal::uint4 _e45 = u4_;
+    i4_ = as_type<metal::int4>(_e45);
+    metal::int2 _e47 = i2_;
+    f2_ = as_type<metal::float2>(_e47);
+    metal::int3 _e49 = i3_;
+    f3_ = as_type<metal::float3>(_e49);
+    metal::int4 _e51 = i4_;
+    f4_ = as_type<metal::float4>(_e51);
     return;
 }

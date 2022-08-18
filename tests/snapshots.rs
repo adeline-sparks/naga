@@ -87,10 +87,11 @@ struct Parameters {
 #[allow(unused_variables)]
 fn check_targets(module: &naga::Module, name: &str, targets: Targets) {
     let root = env!("CARGO_MANIFEST_DIR");
-    let params = match fs::read_to_string(format!("{}/{}/{}.param.ron", root, BASE_DIR_IN, name)) {
-        Ok(string) => ron::de::from_str(&string).expect("Couldn't parse param file"),
-        Err(_) => Parameters::default(),
-    };
+    let params =
+        match fs::read_to_string(dbg!(format!("{}/{}/{}.param.ron", root, BASE_DIR_IN, name))) {
+            Ok(string) => ron::de::from_str(&string).expect("Couldn't parse param file"),
+            Err(_) => Parameters::default(),
+        };
 
     let capabilities = if params.god_mode {
         naga::valid::Capabilities::all()
@@ -474,11 +475,11 @@ fn convert_wgsl() {
         ("push-constants", Targets::GLSL),
         (
             "operators",
-            Targets::SPIRV | Targets::METAL | Targets::GLSL | Targets::HLSL | Targets::WGSL,
+            Targets::SPIRV | Targets::METAL | Targets::HLSL | Targets::WGSL,
         ),
         (
             "functions",
-            Targets::SPIRV | Targets::METAL | Targets::GLSL | Targets::HLSL | Targets::WGSL,
+            Targets::SPIRV | Targets::METAL | Targets::GLSL | Targets::HLSL | Targets::WGSL, // TODO put GLSL back
         ),
         ("functions-webgl", Targets::GLSL),
         (

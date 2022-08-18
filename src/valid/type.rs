@@ -207,7 +207,9 @@ impl super::Validator {
         match kind {
             crate::ScalarKind::Bool => width == crate::BOOL_WIDTH,
             crate::ScalarKind::Float => {
-                width == 4 || (width == 8 && self.capabilities.contains(Capabilities::FLOAT64))
+                width == 4
+                    || (width == 8 && self.capabilities.contains(Capabilities::FLOAT64))
+                    || (width == 2 && self.capabilities.contains(Capabilities::FLOAT16))
             }
             crate::ScalarKind::Sint | crate::ScalarKind::Uint => width == 4,
         }

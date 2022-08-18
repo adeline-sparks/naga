@@ -1,6 +1,7 @@
 static const float4 v_f32_one = float4(1.0, 1.0, 1.0, 1.0);
 static const float4 v_f32_zero = float4(0.0, 0.0, 0.0, 0.0);
 static const float4 v_f32_half = float4(0.5, 0.5, 0.5, 0.5);
+static const half4 v_f16_one = half4(1.0, 1.0, 1.0, 1.0);
 static const int4 v_i32_one = int4(1, 1, 1, 1);
 
 struct Foo {
@@ -29,6 +30,8 @@ float4 builtins()
     int s1_ = (true ? 1 : 0);
     float4 s2_ = (true ? float4(1.0, 1.0, 1.0, 1.0) : float4(0.0, 0.0, 0.0, 0.0));
     float4 s3_ = (bool4(false, false, false, false) ? float4(0.0, 0.0, 0.0, 0.0) : float4(1.0, 1.0, 1.0, 1.0));
+    float4 s4_ = (bool4(false, false, false, false) ? float4(1.0, 1.0, 1.0, 1.0) : float4(1.0, 1.0, 1.0, 1.0));
+    half4 s5_ = (bool4(false, false, false, false) ? half4(1.0, 1.0, 1.0, 1.0) : half4(1.0, 1.0, 1.0, 1.0));
     float4 m1_ = lerp(float4(0.0, 0.0, 0.0, 0.0), float4(1.0, 1.0, 1.0, 1.0), float4(0.5, 0.5, 0.5, 0.5));
     float4 m2_ = lerp(float4(0.0, 0.0, 0.0, 0.0), float4(1.0, 1.0, 1.0, 1.0), 0.10000000149011612);
     float b1_ = float(int4(1, 1, 1, 1).x);
@@ -74,8 +77,8 @@ float constructors()
     float2x3 unnamed_8 = float2x3(float2x3(float3(0.0, 0.0, 0.0), float3(0.0, 0.0, 0.0)));
     uint2 unnamed_9 = uint2(uint2(0u, 0u));
     float2x3 unnamed_10 = float2x3(float2x3(float3(0.0, 0.0, 0.0), float3(0.0, 0.0, 0.0)));
-    float _expr75 = foo.a.x;
-    return _expr75;
+    float _expr76 = foo.a.x;
+    return _expr76;
 }
 
 void logical()
@@ -236,46 +239,46 @@ void assignment()
     int a = 1;
     int3 vec0_ = int3(0, 0, 0);
 
-    int _expr6 = a;
-    a = (_expr6 + 1);
-    int _expr9 = a;
-    a = (_expr9 - 1);
-    int _expr12 = a;
+    int _expr7 = a;
+    a = (_expr7 + 1);
+    int _expr10 = a;
+    a = (_expr10 - 1);
     int _expr13 = a;
-    a = (_expr12 * _expr13);
-    int _expr15 = a;
+    int _expr14 = a;
+    a = (_expr13 * _expr14);
     int _expr16 = a;
-    a = (_expr15 / _expr16);
-    int _expr18 = a;
-    a = (_expr18 % 1);
-    int _expr21 = a;
-    a = (_expr21 & 0);
-    int _expr24 = a;
-    a = (_expr24 | 0);
-    int _expr27 = a;
-    a = (_expr27 ^ 0);
-    int _expr30 = a;
-    a = (_expr30 << 2u);
-    int _expr33 = a;
-    a = (_expr33 >> 1u);
-    int _expr36 = a;
-    a = (_expr36 + 1);
-    int _expr39 = a;
-    a = (_expr39 - 1);
-    int _expr46 = vec0_.y;
-    vec0_.y = (_expr46 + 1);
-    int _expr51 = vec0_.y;
-    vec0_.y = (_expr51 - 1);
+    int _expr17 = a;
+    a = (_expr16 / _expr17);
+    int _expr19 = a;
+    a = (_expr19 % 1);
+    int _expr22 = a;
+    a = (_expr22 & 0);
+    int _expr25 = a;
+    a = (_expr25 | 0);
+    int _expr28 = a;
+    a = (_expr28 ^ 0);
+    int _expr31 = a;
+    a = (_expr31 << 2u);
+    int _expr34 = a;
+    a = (_expr34 >> 1u);
+    int _expr37 = a;
+    a = (_expr37 + 1);
+    int _expr40 = a;
+    a = (_expr40 - 1);
+    int _expr47 = vec0_.y;
+    vec0_.y = (_expr47 + 1);
+    int _expr52 = vec0_.y;
+    vec0_.y = (_expr52 - 1);
     return;
 }
 
 [numthreads(1, 1, 1)]
 void main()
 {
-    const float4 _e4 = builtins();
-    const float4 _e5 = splat();
-    const float3 _e7 = bool_cast(float4(1.0, 1.0, 1.0, 1.0).xyz);
-    const float _e8 = constructors();
+    const float4 _e5 = builtins();
+    const float4 _e6 = splat();
+    const float3 _e8 = bool_cast(float4(1.0, 1.0, 1.0, 1.0).xyz);
+    const float _e9 = constructors();
     logical();
     arithmetic();
     bit();

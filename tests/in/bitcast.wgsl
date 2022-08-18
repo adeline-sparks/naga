@@ -1,5 +1,8 @@
+enable f16;
+
 @compute @workgroup_size(1)
 fn main() {
+    var i = 0;
     var i2 = vec2<i32>(0);
     var i3 = vec3<i32>(0);
     var i4 = vec4<i32>(0);
@@ -12,6 +15,9 @@ fn main() {
     var f3 = vec3<f32>(0.0);
     var f4 = vec4<f32>(0.0);
 
+    var h2 = vec2<f16>(0.0);
+    var h4 = vec4<f16>(0.0);
+
     u2 = bitcast<vec2<u32>>(i2);
     u3 = bitcast<vec3<u32>>(i3);
     u4 = bitcast<vec4<u32>>(i4);
@@ -23,4 +29,8 @@ fn main() {
     f2 = bitcast<vec2<f32>>(i2);
     f3 = bitcast<vec3<f32>>(i3);
     f4 = bitcast<vec4<f32>>(i4);
+
+    // TODO Expression::As can't distinguish between vec2<f16> and f32??? (Same ScalarKind)
+    //h2 = bitcast<vec2<f16>>(i);
+    //h4 = bitcast<vec4<f16>>(i2);
 }

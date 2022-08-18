@@ -1,7 +1,10 @@
+enable f16;
+
 //TODO: support splatting constructors for globals?
 let v_f32_one = vec4<f32>(1.0, 1.0, 1.0, 1.0);
 let v_f32_zero = vec4<f32>(0.0, 0.0, 0.0, 0.0);
 let v_f32_half = vec4<f32>(0.5, 0.5, 0.5, 0.5);
+let v_f16_one = vec4<f16>(1.0h, 1.0h, 1.0h, 1.0h);
 let v_i32_one = vec4<i32>(1, 1, 1, 1);
 
 fn builtins() -> vec4<f32> {
@@ -10,6 +13,9 @@ fn builtins() -> vec4<f32> {
     let s1 = select(0, 1, condition);
     let s2 = select(v_f32_zero, v_f32_one, condition);
     let s3 = select(v_f32_one, v_f32_zero, vec4<bool>(false, false, false, false));
+    let s4 = select(v_f32_one, v_f32_one, vec4<bool>(false, false, false, false));
+    let s5 = select(v_f16_one, v_f16_one, vec4<bool>(false, false, false, false));
+
     // mix()
     let m1 = mix(v_f32_zero, v_f32_one, v_f32_half);
     let m2 = mix(v_f32_zero, v_f32_one, 0.1);
